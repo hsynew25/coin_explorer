@@ -2,21 +2,21 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
-const Container = styled.div`
+const Container = styled("div")`
   margin-bottom: 50px;
 `;
 
-const Name = styled.span`
+const Name = styled("a")`
   font-weight: 600;
   display: block;
   margin-bottom: 10px;
 `;
 
-const Links = styled.div`
+const Links = styled("div")`
   margin-top: 15px;
 `;
 
-const Link = styled.a`
+const Link = styled("a")`
   text-decoration: underline;
 `;
 

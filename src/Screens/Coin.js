@@ -1,10 +1,11 @@
-import React from "react";
 import styled from "styled-components";
-import PropTypes from "prop-types";
-import { Route, Link, withRouter } from "react-router-dom";
-import Loader from "../../Components/Loader";
-import Markets from "../Markets";
-import Exchanges from "../CoinExchanges";
+import propTypes from "prop-types";
+import { Link, Route, useLocation, useParams } from "react-router-dom";
+import { getCoinDetail } from "../api";
+import { useAxios } from "./useAxios";
+import Loader from "../Components/Loader";
+import Markets from "./Markets";
+import Exchanges from "./CoinExchanges";
 
 const Title = styled("h1")``;
 
@@ -41,8 +42,16 @@ const Item = styled("li")`
   color: ${(props) => (props.active ? "white" : "black")};
 `;
 
-const CoinPresenter = withRouter(({ location: { pathname }, loading, coin }) =>
-  loading ? (
+function Coin() {
+  const { id } = useParams();
+  const { pathname } = useLocation();
+  const { loading, error, data: coin } = useAxios(getCoinDetail, id);
+
+  if (error) {
+    console.log(error);
+  }
+
+  return loading ? (
     <Loader />
   ) : (
     <>
@@ -75,21 +84,21 @@ const CoinPresenter = withRouter(({ location: { pathname }, loading, coin }) =>
       <Route path="/coins/:id/markets" component={Markets} />
       <Route path="/coins/:id/exchanges" component={Exchanges} />
     </>
-  )
-);
+  );
+}
 
-CoinPresenter.propTypes = {
-  loading: PropTypes.bool.isRequired,
-  coin: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    symbol: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    rank: PropTypes.number.isRequired,
-    open_source: PropTypes.bool.isRequired,
-    proof_type: PropTypes.string.isRequired,
-    org_structure: PropTypes.string.isRequired,
+Coin.propTypes = {
+  loading: propTypes.bool.isRequired,
+  coin: propTypes.shape({
+    id: propTypes.string.isRequired,
+    name: propTypes.string.isRequired,
+    symbol: propTypes.string.isRequired,
+    description: propTypes.string.isRequired,
+    rank: propTypes.number.isRequired,
+    open_source: propTypes.bool.isRequired,
+    proof_type: propTypes.string.isRequired,
+    org_structure: propTypes.string.isRequired,
   }),
 };
 
-export default CoinPresenter;
+export default Coin;
